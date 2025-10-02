@@ -19,7 +19,7 @@ import messageRoutes from "./routes/messageRoutes";
 import mailRoutes from "./routes/mailRoute";
 import passwordResetRoutes from "./routes/passwordResetRoutes";
 dotenv.config();
-const requiredEnv = ["MONGO_URI", "JWT_SECRET", "PORT"];
+const requiredEnv = ["MONGO_URI", "JWT_SECRET"];
 requiredEnv.forEach((key) => {
   if (!process.env[key]) throw new Error(`${key} is missing in .env`);
 });
@@ -28,7 +28,8 @@ connectDB();
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173", 
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+
     credentials: true,
   })
 );
@@ -53,7 +54,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/password", passwordResetRoutes);
 app.use(notFound);
 app.use(errorHandler);
-const PORT: number = parseInt(process.env.PORT!, 10);
+const PORT: number = parseInt(process.env.PORT || "3000", 10);
 const NODE_ENV: string = process.env.NODE_ENV || "development";
 
 app.listen(PORT, () => {
