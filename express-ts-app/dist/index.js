@@ -57,7 +57,7 @@ const messageRoutes_1 = __importDefault(require("./routes/messageRoutes"));
 const mailRoute_1 = __importDefault(require("./routes/mailRoute"));
 const passwordResetRoutes_1 = __importDefault(require("./routes/passwordResetRoutes"));
 dotenv.config();
-const requiredEnv = ["MONGO_URI", "JWT_SECRET", "PORT"];
+const requiredEnv = ["MONGO_URI", "JWT_SECRET"];
 requiredEnv.forEach((key) => {
     if (!process.env[key])
         throw new Error(`${key} is missing in .env`);
@@ -65,7 +65,7 @@ requiredEnv.forEach((key) => {
 (0, db_1.default)();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true,
 }));
 app.use(express_1.default.json());
@@ -89,7 +89,7 @@ app.use("/api/dashboard", dashboardRoutes_1.default);
 app.use("/api/password", passwordResetRoutes_1.default);
 app.use(errorMiddleware_1.notFound);
 app.use(errorMiddleware_1.errorHandler);
-const PORT = parseInt(process.env.PORT, 10);
+const PORT = parseInt(process.env.PORT || "3000", 10);
 const NODE_ENV = process.env.NODE_ENV || "development";
 app.listen(PORT, () => {
     console.log(`Server running in ${NODE_ENV} mode on http://localhost:${PORT}`);
