@@ -18,25 +18,46 @@ import notificationRoutes from "./routes/notificationRoutes";
 import messageRoutes from "./routes/messageRoutes";
 import mailRoutes from "./routes/mailRoute";
 import passwordResetRoutes from "./routes/passwordResetRoutes";
+
 dotenv.config();
+
 const requiredEnv = ["MONGO_URI", "JWT_SECRET"];
 requiredEnv.forEach((key) => {
   if (!process.env[key]) throw new Error(`${key} is missing in .env`);
 });
+
 connectDB();
 
 const app = express();
+
+// ---------------- CORS Setup ----------------
+const allowedOrigins = [
+  "http://192.168.1.100:5173", 
+  "http://localhost:5173",     
+  process.env.CLIENT_URL || "", 
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like Postman) or allowed origins
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS not allowed from origin: ${origin}`));
+      }
+    },
     credentials: true,
   })
 );
+// ---------------------------------------------
+
 app.use(express.json());
+
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Backend is running!" });
 });
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
@@ -52,8 +73,10 @@ app.use("/api/discounts", discountRoutes);
 app.use("/api", mailRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/password", passwordResetRoutes);
+
 app.use(notFound);
 app.use(errorHandler);
+
 const PORT: number = parseInt(process.env.PORT || "3000", 10);
 const NODE_ENV: string = process.env.NODE_ENV || "development";
 
