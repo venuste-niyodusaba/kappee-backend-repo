@@ -33,7 +33,8 @@ const app = express();
 // ---------------- CORS Setup ----------------
 const allowedOrigins = [
   "http://192.168.1.100:5173", 
-  "http://localhost:5173",     
+  "http://localhost:5173",
+  "https://klab-assignment-0ne.vercel.app/",  
   process.env.CLIENT_URL || "", 
 ].filter(Boolean);
 
