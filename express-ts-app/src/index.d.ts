@@ -1,10 +1,11 @@
 import "express";
-import File from "multer";  // ← import Multer's File type
+import multer from "multer";
 
 declare global {
   namespace Express {
     interface Request {
-      File?: File;  // use Multer's File type directly
+      file?: Express.Multer.File;       
+      files?: { [fieldname: string]: Express.Multer.File[] } | Express.Multer.File[];
     }
   }
 }
