@@ -5,8 +5,8 @@ const endpointsFiles = ["./src/index.ts"];
 
 const doc = {
   info: {
-    title: "My API",
-    description: "API documentation",
+    title: "kappe API",
+    description: " kapee backend API documentation",
   },
   host: "localhost:3000",
   schemes: ["http"],

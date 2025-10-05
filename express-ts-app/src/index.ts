@@ -32,12 +32,13 @@ connectDB();
 const app = express();
 
 // ---------------- CORS Setup ----------------
+
 const allowedOrigins = [
-  "http://192.168.1.100:5173", 
-  "http://localhost:5173",
-  "https://klab-assignment-0ne.vercel.app",  
-  process.env.CLIENT_URL || "", 
-].filter(Boolean);
+  "http://localhost:3000",     
+  "http://127.0.0.1:3000",    
+  "http://localhost:5000",    
+  "https://kappee-backend.onrender.com" 
+];
 
 app.use(
   cors({
@@ -46,12 +47,16 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.warn(`❌ CORS blocked for origin: ${origin}`);
         callback(new Error(`CORS not allowed from origin: ${origin}`));
       }
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 // ---------------------------------------------
 
 app.use(express.json());

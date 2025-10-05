@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "My API",
-    "description": "API documentation",
+    "title": "kappe API",
+    "description": "API kappee backend documentation",
     "version": "1.0.0"
   },
   "host": "localhost:3000",
