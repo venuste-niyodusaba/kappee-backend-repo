@@ -18,7 +18,8 @@ import notificationRoutes from "./routes/notificationRoutes";
 import messageRoutes from "./routes/messageRoutes";
 import mailRoutes from "./routes/mailRoute";
 import passwordResetRoutes from "./routes/passwordResetRoutes";
-
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger-output.json';
 dotenv.config();
 
 const requiredEnv = ["MONGO_URI", "JWT_SECRET"];
@@ -58,7 +59,7 @@ app.use(express.json());
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Backend is running!" });
 });
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
@@ -74,7 +75,6 @@ app.use("/api/discounts", discountRoutes);
 app.use("/api", mailRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/password", passwordResetRoutes);
-
 app.use(notFound);
 app.use(errorHandler);
 
