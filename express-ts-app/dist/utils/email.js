@@ -9,8 +9,8 @@ dotenv_1.default.config();
 const transporter = nodemailer_1.default.createTransport({
     service: "gmail",
     auth: {
-        user: process.env.APP_NAME,
-        pass: process.env.APP_PASSWORD,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
     },
     tls: {
         rejectUnauthorized: false,
@@ -19,7 +19,7 @@ const transporter = nodemailer_1.default.createTransport({
 const sendMailSender = async (to, subject, htmlContent) => {
     try {
         const mailOptions = {
-            from: process.env.APP_NAME,
+            from: process.env.EMAIL_USER,
             to,
             subject,
             html: htmlContent,

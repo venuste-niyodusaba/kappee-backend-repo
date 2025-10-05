@@ -56,6 +56,8 @@ const notificationRoutes_1 = __importDefault(require("./routes/notificationRoute
 const messageRoutes_1 = __importDefault(require("./routes/messageRoutes"));
 const mailRoute_1 = __importDefault(require("./routes/mailRoute"));
 const passwordResetRoutes_1 = __importDefault(require("./routes/passwordResetRoutes"));
+const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swagger_output_json_1 = __importDefault(require("./swagger-output.json"));
 dotenv.config();
 const requiredEnv = ["MONGO_URI", "JWT_SECRET"];
 requiredEnv.forEach((key) => {
@@ -64,14 +66,31 @@ requiredEnv.forEach((key) => {
 });
 (0, db_1.default)();
 const app = (0, express_1.default)();
+// ---------------- CORS Setup ----------------
+const allowedOrigins = [
+    "http://192.168.1.100:5173",
+    "http://localhost:5173",
+    "https://klab-assignment-0ne.vercel.app",
+    process.env.CLIENT_URL || "",
+].filter(Boolean);
 app.use((0, cors_1.default)({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like Postman) or allowed origins
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error(`CORS not allowed from origin: ${origin}`));
+        }
+    },
     credentials: true,
 }));
+// ---------------------------------------------
 app.use(express_1.default.json());
 app.get("/", (req, res) => {
     res.json({ message: "Backend is running!" });
 });
+app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_output_json_1.default));
 app.use("/api/auth", authRoutes_1.default);
 app.use("/api/users", userRoutes_1.default);
 app.use("/api/categories", categoryRoutes_1.default);
